@@ -17,8 +17,10 @@ function App() {
   const [nextId, setNextId] = useState(0)
   const [defaultMessage, setDefaultMessage] = useState('')
   const [groupSize, setGroupSize] = useState(0)
+  const [groups, setGroups] = useState([])
 
   function handleAddPlayer(player1, player2) {
+
     setPlayers([
       ...players,
       {
@@ -36,6 +38,7 @@ function App() {
   }
 
   function handleGenerate() {
+    let newGroups = []
     if (players.length == 4) {
       setDefaultMessage("Semifinal e final")
       setGroupSize(2)
@@ -56,8 +59,14 @@ function App() {
       setDefaultMessage("Irregular")
     }
 
-    handleRandomize();
-    console.log("the button's working, at least")
+    handleRandomize()
+
+    for (let i = 0; i < players.lenght; i += groupSize) {
+      const group = players.slice(i, i + groupSize);
+      newGroups.push(group)
+    }
+
+    setGroups(newGroups)
   }
 
 
@@ -87,6 +96,31 @@ function App() {
         </table>
         <button onClick={handleGenerate}>Randomizar Jogadores</button>
         <h2>{defaultMessage}</h2>
+
+        <h3>Grupos</h3>
+        {groups.map((group, index) => (
+          <div key={index}>
+            <h4>Grupo {index + 1}</h4>
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Jogador 1</th>
+                  <th>Jogador 2</th>
+                </tr>
+              </thead>
+              <tbody>
+                {group.map(player => (
+                  <tr key={player.id}>
+                    <td>{player.id}</td>
+                    <td>{player.player1}</td>
+                    <td>{player.player2}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))}
       </div>
     </>
 
